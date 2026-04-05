@@ -10,10 +10,10 @@
   <title>Student Form Error and Debugging Activity</title>
   <style>
     :root {
-      --bg: #f7c5b0;
-      --panel: #f5f0e8;
+      --bg: #ebb0f7;
+      --panel: #efe5ff;
       --ink: #1f2937;
-      --accent: #9a3412;
+      --accent: #602a70;
       --border: #5f3f19;
       --error: #b91c1c;
       --correct: #166534;
@@ -28,7 +28,7 @@
       margin: 0;
       font-family: Tahoma, sans-serif;
       text-align: justify;
-      background: linear-gradient(180deg, #efe2cf 0%, var(--bg) 100%);
+      background: linear-gradient(180deg, #fef3ff 0%, var(--bg) 100%);
       color: var(--ink);
     }
 
