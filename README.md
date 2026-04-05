@@ -1,1 +1,380 @@
-# Togonon_Allana_Form_Error-Debugging_Activity
+<!--TOGONON, Allana Jane M.-->
+<!--BSCS 1-1-->
+<!--April 5, 2026-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Form Error and Debugging Activity</title>
+  <style>
+    :root {
+      --bg: #f7c5b0;
+      --panel: #f5f0e8;
+      --ink: #1f2937;
+      --accent: #9a3412;
+      --border: #5f3f19;
+      --error: #b91c1c;
+      --correct: #166534;
+      --overlay: rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Tahoma, sans-serif;
+      text-align: justify;
+      background: linear-gradient(180deg, #efe2cf 0%, var(--bg) 100%);
+      color: var(--ink);
+    }
+
+    .wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #7e8383;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: #fdfdfd;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .secondary {
+      background: #e2e8f0;
+      color: #111827;
+    }
+
+    .output, .debug {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    .debug {
+      background: #f8fafc;
+      font-family: Consolas, monospace;
+    }
+
+    .error-text {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 6px;
+      min-height: 20px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--overlay);
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      width: min(560px, 100%);
+      background: #fff;
+      border-radius: 18px;
+      padding: 24px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal h2 {
+      margin-top: 0;
+    }
+
+    code {
+      background: #f3f4f6;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="panel">
+      <h1>Student Form Error and Debugging Activity</h1>
+      
+
+      <form id="studentForm" novalidate>
+        <div class="grid">
+
+          <div>
+            <label for="firstName">First Name</label>
+            <input id="firstName" name="firstName" type="text" />
+            <div class="error-text" id="firstNameError"></div>
+          </div>
+
+          <div>
+            <label for="middleInitial">Middle Initial</label>
+            <input id="middleInitial" name="middleInitial" type="text" />
+            <div class="error-text" id="middleInitialError"></div>
+          </div>
+
+          <div>
+            <label for="lastName">Last Name</label>
+            <input id="lastName" name="lastName" type="text" />
+            <div class="error-text" id="lastNameError"></div>
+          </div>
+
+          <div class="full">
+            <label for="address">Address</label>
+            <textarea id="address" name="address"></textarea>
+            <div class="error-text" id="addressError"></div>
+          </div>
+
+          <div>
+            <label for="age">Age</label>
+            <input id="age" name="age" type="text" />
+            <div class="error-text" id="ageError"></div>
+          </div>
+
+          <div>
+            <label for="contactNumber">Contact Number</label>
+            <input id="contactNumber" name="contactNumber" type="text" />
+            <div class="error-text" id="contactNumberError"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" onclick="validateForm()">Validate Form</button>
+          <button class="secondary" type="reset" onclick="resetForm()">Reset</button>
+        </div>
+      </form>
+
+      <div class="output" id="output">
+        Fill out the form, then click "Validate Form".
+      </div>
+
+      <div class="debug" id="debugOutput">
+        Debug console log:
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h2 id="modalTitle">Validation Result</h2>
+      <p id="modalMessage"></p>
+      <div class="actions">
+        <button class="primary" id="closeModalBtn" type="button">Close</button>
+      </div>
+    </div>
+  </div>    
+
+<script>
+function validateForm() {
+  event.preventDefault(); 
+
+  let hasError = false;
+
+  var firstName = document.getElementById("firstName").value;
+  var middleInitial = document.getElementById("middleInitial").value;
+  var lastName = document.getElementById("lastName").value;
+  var address = document.getElementById("address").value;
+  var age = document.getElementById("age").value;
+  var contactNumber = document.getElementById("contactNumber").value;
+
+  document.querySelectorAll(".error-text").forEach(el => el.innerText = "");
+
+
+  const debug = document.getElementById("debugOutput");
+  debug.innerText = "Debug console log:\n";
+
+  console.log("Starting validation...");
+  log("Starting validation...");
+
+  // FNAME
+  if (firstName === "") {
+    setError("firstNameError", "First name is required.");
+    console.log("Validation Error in First Name: First name is empty");
+    log("Validation Error: First name is empty.");
+    hasError = true;
+  }
+
+  // M-INITIAL
+  if (middleInitial.length > 1) {
+    setError("middleInitialError", "Must only contain one letter.");
+    console.log("Validation Error in Middle Initial: Middle initial is too long");
+    log("Validation Error: Middle initial is too long.");
+    hasError = true;
+  }
+
+  if (middleInitial === "") {
+    setError("middleInitialError", "Middle initial is required.");
+    console.log("Validation Error in Middle Initial: Middle initial is empty");
+    log("Validation Error: Middle initial is empty.");
+    hasError = true;
+  }
+
+  // LNAME
+  if (lastName === "") {
+    setError("lastNameError", "Last name is required.");
+    console.log("Validation Error in Last Name: Last name is empty");
+    log("Validation Error: Last name is empty.");
+    hasError = true;
+  }
+
+  // ADDRESS
+  if (address === "") {
+    setError("addressError", "Address is required.");
+    console.log("Validation Error in Address: Address is empty");
+    log("Validation Error: Address is empty.");
+    hasError = true;
+  }
+
+  // AGE
+  if (!/^[0-9]+$/.test(age)) {
+    setError("ageError", "Age must contain numbers only.");
+    console.log("Validation Error in Age: Age invalid (not numeric)");
+    console.log("Age Input Value: " + (age === "" ? "none" : age));
+    log("Age Input Value: " + (age === "" ? "none" : age));
+    log("Validation Error: Age is invalid. Must only contain numbers.");
+    hasError = true;
+  }
+
+  if (age === "") {
+    setError("ageError", "Age is required. Must only contain numbers.");
+    console.log("Validation Error in Age: Age is empty.");
+    log("Validation Error: Age is Empty.");
+    hasError = true;
+  }
+
+  // C-NUMBER
+  if (!/^[0-9]{7,15}$/.test(contactNumber)) {
+    setError("contactNumberError", "Must be 7–15 digits only.");
+    console.log("Validation Error in Contact Number: Contact number is invalid. Must be 7-15 digits only.");
+    log("Validation Error: Contact number is invalid. Must be 7-15 digits only.");
+    hasError = true;
+  }
+
+  if (contactNumber === "") {
+    setError("contactNumberError", "Contact Number is required. Must be only 7-15 digits.");
+    console.log("Validation Error in Contact Number: Contact Number is empty.");
+    log("Validation Error: Contact Number is Empty.");
+    hasError = true;
+  }
+
+  const output = document.getElementById("output");
+
+  if (hasError) {
+    output.innerText = "Form has errors. Please Try Again. Thank You!";
+    showModal("Validation Error", "There are errors in the form. Please fix them.");
+    console.log("Validation failed.");
+    log("Validation failed.");
+  } else {
+    output.innerText = "Form submitted successfully!";
+    showModal("Success", "Form submitted successfully! Thank You!");
+    console.log("Validation successful.\n Validation process finished.");
+    log("Validation successful.\n Validation process finished.");
+  }
+}
+
+function setError(id, message) {
+  document.getElementById(id).innerText = message;
+}
+
+function log(message) {
+  const debug = document.getElementById("debugOutput");
+  debug.innerText += message + "\n";
+}
+
+function resetForm() {
+  document.getElementById("output").innerText =
+    'Fill out the form, then click "Validate Form".';
+  document.getElementById("debugOutput").innerText =
+    "Debug console log:";
+  document.querySelectorAll(".error-text").forEach(el => el.innerText = "");
+}
+
+function showModal(title, message) {
+  document.getElementById("modalTitle").innerText = title;
+  document.getElementById("modalMessage").innerText = message;
+  document.getElementById("modalBackdrop").classList.add("show");
+}
+
+document.getElementById("closeModalBtn").onclick = function () {
+  document.getElementById("modalBackdrop").classList.remove("show");
+};
+</script>
+ 
+
+</body>
+</html>
